@@ -1,6 +1,7 @@
 # Stand-Alone Projects
 ## Manual RSA Encyption Decryption 
 sp1.  Performing Manual RSA Encryption Decryption using Python and Mathematical Algorithms
+
       Algorithm :
         1) p and q are two supposedly large prime numbers which are strictly private
         2) A value n is calculated. n = p x q. It is better to keep it private but this can be public as it is extremely difficult to find p and q based off of n.
