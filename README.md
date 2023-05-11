@@ -1,6 +1,6 @@
 # Stand-Alone Projects
 ## Manual RSA Encyption Decryption 
-sp1.  Performing Manual RSA Encryption Decryption using Python and Mathematical Algorithms
+sp1.  Performing Manual RSA Encryption Decryption using Python and Mathematical Algorithms ( Python )
 
       Algorithm :
         1) p and q are two supposedly large prime numbers which are strictly private
@@ -15,3 +15,13 @@ sp1.  Performing Manual RSA Encryption Decryption using Python and Mathematical 
         7) To Decrypt A Cipher
             i)  for each character, take its power to the privateKey and modulo it with n. decryptedUnicode = (character ^ privateKey) % n
             ii) Decode the character from Unicode to its character equivalent.
+
+sp2. Path Finder ( C++ )
+
+      Procedure:
+      1) The User is asked to create a mxn matrix of their choice of height and width.
+      2) The user then selects a % of impassible objects inside the given map.
+      3) This creates a map of paths and random numbers with -1 as an impassible block.
+      4) The user is then asked to specify End Point and the Start Point. 
+      5) From that the system uses dijkstra algorithm alongside a greedy approach to find the shortest path from the start to end point without crossing the impassible blocks
+      
