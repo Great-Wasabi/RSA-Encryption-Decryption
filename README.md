@@ -16,6 +16,7 @@ sp1.  Performing Manual RSA Encryption Decryption using Python and Mathematical 
             i)  for each character, take its power to the privateKey and modulo it with n. decryptedUnicode = (character ^ privateKey) % n
             ii) Decode the character from Unicode to its character equivalent.
 
+## Path Finding using Dijkstra's Algorithm
 sp2. Path Finder ( C++ )
 
       Procedure:
