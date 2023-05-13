@@ -11,14 +11,14 @@ using namespace std;
 struct Node
 {
    public:
-    int x;
-    int y;
+    int x, y;
 
     Node()
     {
         x = -1;
         y = -1;
     }
+    
     Node(int X, int Y)
     {
         x = X;
@@ -26,15 +26,14 @@ struct Node
     }
 };
 
-// struct Queue that implements a queue data structure using an array
 struct Queue
 {
-   private:
+private:
     Node* arr;
     int front;
     int back;
 
-   public:
+public:
     void push(int x, int y) { arr[back++] = Node(x, y); }
     Node pop() { return arr[front++]; };
     bool empty() { return (front == back); };
@@ -45,6 +44,30 @@ struct Queue
         front = back = 0;
     }
 };
+
+char** create2DCharArray(int** matrix, int height, int width, int goalX, int goalY, int startX, int startY) 
+{
+    char** charArray = new char*[height];
+    for (int i = 0; i < height; i++)
+        charArray[i] = new char[width];
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            if(matrix[i][j] == -1)
+                charArray[i][j] = '#';
+            else if(matrix[i][j] == 1)
+                charArray[i][j] = '$';
+            else
+                charArray[i][j] = ' ';
+        }
+    }
+
+    charArray[startY][startX] = '@';
+
+    return charArray;
+}
 
 int** reformMatrix(int** matrix, int height, int width, int impass, int value) 
 {
@@ -93,8 +116,27 @@ void printMatrix(int** matrix, int height, int width)
     }
 }
 
+void printMatrix(char** matrix, int height, int width) {
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            char ch = matrix[i][j];
+            if (ch == '#') {
+                std::cout << "\033[31m" << ch << "\033[0m ";
+            } else if (ch == '$' || ch == '@') {
+                std::cout << "\033[32m" << ch << "\033[0m ";
+            } else if (ch == '*') {
+                std::cout << "\033[33m" << ch << "\033[0m ";
+            } else {
+                std::cout << ch << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
 void Moore(int** matrix, int W, int H, int goalX, int goalY) 
 {
+    matrix[goalY][goalX] = 1;
     Queue q(W * H);
     q.push(goalY, goalX);
 
@@ -147,12 +189,76 @@ void Moore(int** matrix, int W, int H, int goalX, int goalY)
     }
 }
 
+void greed(int** arr, int W, int H,int X,int Y,char** charr)
+{
+    int newX, newY;
+    int mini = arr[Y][X];
+    if(mini == 1)
+        return;
+    else if(arr[Y-1][X-1] < mini && arr[Y-1][X-1] > 1)
+    {
+        charr[Y-1][X-1] = '*';
+        newX = X-1;newY = Y-1;
+        greed(arr, W, H, newX, newY, charr);
+    }
+    else if(arr[Y][X-1] < mini && arr[Y][X-1] > 1)
+    {
+        charr[Y][X-1] = '*';
+        newX = X-1;newY = Y;
+        greed(arr, W, H, newX, newY, charr);
+    }
+    else if(arr[Y+1][X-1] < mini && arr[Y+1][X-1] > 1)
+    {
+        charr[Y+1][X-1] = '*';
+        newX = X-1;newY = Y+1;
+        greed(arr, W, H, newX, newY, charr);
+    }
+    else if(arr[Y-1][X] < mini && arr[Y-1][X] > 1)
+    {
+        charr[Y-1][X] = '*';
+        newX = X;newY = Y-1;
+        greed(arr, W, H, newX, newY, charr);
+    }
+    else if(arr[Y][X] < mini && arr[Y][X] > 1)
+    {
+        charr[Y][X] = '*';
+        newX = X;newY = Y;
+        greed(arr, W, H, newX, newY, charr);
+    }
+    else if(arr[Y+1][X] < mini && arr[Y+1][X] > 1)
+    {
+        charr[Y+1][X] = '*';
+        newX = X;newY = Y+1;
+        greed(arr, W, H, newX, newY, charr);
+    }
+    else if(arr[Y-1][X+1] < mini && arr[Y-1][X+1] > 1)
+    {
+        charr[Y-1][X+1] = '*';
+        newX = X+1;newY = Y-1;
+        greed(arr, W, H, newX, newY, charr);
+    }
+    else if(arr[Y][X+1] < mini && arr[Y][X+1] > 1)
+    {
+        charr[Y][X+1] = '*';
+        newX = X+1;newY = Y;
+        greed(arr, W, H, newX, newY, charr);
+    }
+    else if(arr[Y+1][X+1] < mini && arr[Y+1][X+1] > 1)
+    {
+        charr[Y+1][X+1] = '*';
+        newX = X+1;newY = Y+1;
+        greed(arr, W, H, newX, newY, charr);
+    }
+}
+
 int main()
 {
     int height, width;
     int impass;
     int goalX, goalY, startX, startY;
+    int rgoalX, rgoalY, rstartX, rstartY; 
     char choice;
+    char** graphArrayChar;
     
     cout << "Welcome to the WaveFront Pather" <<endl <<endl;
     cout << "Please tell me about the grid you want to generate." << endl;
@@ -193,11 +299,14 @@ int main()
             cout << "Sorry, that position is inside an obstacle or Out of Bounds" << endl;
         else
         {
-            int rgoalY = height-goalY-1;
-            int rgoalX = goalX;
+            rgoalY = height-goalY-1;
+            rgoalX = goalX-1;
             break;
         }     
     }
+
+    Moore(graphArray, width, height, rgoalX, rgoalY);
+    printMatrix(graphArray, height, width);
 
     while(true)
     {
@@ -210,12 +319,16 @@ int main()
             cout << "Sorry, that position is inside an obstacle or Out of Bounds" << endl;
         else
         {
-            int rstartY = height-startY-1;
-            int rstartX = startX;
+            rstartY = height-startY-1;
+            rstartX = startX;
             break;
         }     
     }
-
+    
+    
+    graphArrayChar = create2DCharArray(graphArray, height, width, rgoalX, rgoalY, rstartX, rstartY);
+    greed(graphArray, width, height, rstartX, rstartY, graphArrayChar);
+    printMatrix(graphArrayChar, height, width);
 
 
     return 0;
